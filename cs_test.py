@@ -11,7 +11,7 @@ from aiocache import cached
 from refresh_component import refresh_component
 
 sg = Subgrounds()
-headers = ['Protocol', 'Chain', 'TVL ($)', 'Realized Losses ($)', 'At-Risk Capital ($)', 'At-Risk Capital (%)']
+headers = ['Protocol', 'Chain', 'TVL ($)', 'Outstanding Realized Losses ($)', 'At-Risk Capital ($)', 'At-Risk Capital (%)']
 
     
 def get_tvl(endpoint):
@@ -185,32 +185,6 @@ async def main():
     return aave_harmony, aave_avalanche, aave_arbitrum, aave_fantom, aave_optimism
 
 
-###Non-async version of main()
-# @st.cache(allow_output_mutation=True)
-# def main():
-#     arbitrum_url = 'https://api.thegraph.com/subgraphs/name/messari/aave-v3-arbitrum-extended'
-#     optimism_url = 'https://api.thegraph.com/subgraphs/name/messari/aave-v3-optimism-extended'
-#     fantom_url = 'https://api.thegraph.com/subgraphs/name/messari/aave-v3-fantom-extended'
-#     harmony_url = 'https://api.thegraph.com/subgraphs/name/messari/aave-v3-harmony-extended'
-#     avalanche_url = 'https://api.thegraph.com/subgraphs/name/messari/aave-v3-avalanche-extended'
-#     result = [
-#     get_protocol_data('AAVE', 'Harmony', harmony_url),
-#     get_protocol_data('AAVE', 'Avalanche', avalanche_url),
-#     get_protocol_data('AAVE', 'Arbitrum', arbitrum_url),
-#     get_protocol_data('AAVE', 'Fantom', fantom_url),
-#     get_protocol_data('AAVE', 'Optimism', optimism_url)
-#     ]
-
-#     aave_harmony = result[0]
-#     aave_avalanche = result[1]
-#     aave_arbitrum = result[2]
-#     aave_fantom = result[3]
-#     aave_optimism = result[4]
-
-#     return aave_harmony, aave_avalanche, aave_arbitrum, aave_fantom, aave_optimism
-#print(result)
-
-
 #get values at risk
 def get_var(x, discount_factor):
     data = x
@@ -256,7 +230,7 @@ def compile_all(x, discount_factor):
     final_df['Value At Risk ($)'] = final_df['Value At Risk ($)'].fillna(0)
     final_df['Value At Risk (%)'] = final_df['Value At Risk (%)'].fillna(0)
     final_df['Value At Risk (%)'] = (final_df['Value At Risk (%)'] * 100).round(2)
-    final_df = final_df.rename(columns={'TVL':'TVL ($)', 'Realized Losses':'Realized Losses ($)'})
+    final_df = final_df.rename(columns={'TVL':'TVL ($)', 'Realized Losses':'Realized Losses ($)', 'Value At Risk ($)':'At-Risk Capital ($)', 'Value At Risk (%)':'At-Risk Capital (%)'})
     final_df = final_df.reset_index(drop=True)
     #final_df = final_df.style.format({'Value At Risk ($)': '${0:,.0f}', 'TVL':'${0:,.0f}', \
     #                                 'Realized Losses': '${0:,.0f}', 'Value At Risk (%)': '{0:,.2%}'})
@@ -267,9 +241,6 @@ def compile_all(x, discount_factor):
 
 
 
-
-
-##NEW CODE
 def aggrid_interactive_table(df):
     options = GridOptionsBuilder.from_dataframe(
         df, 
@@ -290,13 +261,9 @@ def aggrid_interactive_table(df):
         height=300
         )
     return selection
-###############
 
 
 
-
-
-#aave_harmony, aave_avalanche, aave_arbitrum, aave_fantom, aave_optimism = main()
 aave_harmony, aave_avalanche, aave_arbitrum, aave_fantom, aave_optimism = asyncio.run(main())
 
 
@@ -308,13 +275,6 @@ st.title("Credit Score App")
 ###variables & get_protocol_data objects:
 discount = st.selectbox('If Collateral Value falls x%: ', [-5, -10, -15, -20, -25, -50])
 discount_factor = 1 - (abs(discount)/100)
-
-
-# if 'discount_variable' not in st.session_state:
-#     st.session_state['discount_variable'] = discount_factor
-# st.session_state['discount_variable'] = discount_factor
-# st.write(st.session_state['discount_variable'])
-
 
 
 aave_harmony_data = compile_all(aave_harmony, discount_factor)
@@ -336,10 +296,6 @@ comprehensive_list = [aave_harmony_data[1], aave_avalanche_data[1], aave_arbitru
 agg_df = pd.DataFrame(comprehensive_list)
 agg_df.columns = headers
 agg_df = agg_df.reset_index(drop=True)
-#agg_df = agg_df.style.format({'TVL': '${0:,.0f}', 'Realized Losses': '${0:,.0f}', 'At-Risk Capital ($)': '${0:,.0f}', 'At-Risk Capital (%)': '{0:,.2%}'})
-#st.write(agg_df)
-
-
 
 
 
@@ -358,8 +314,6 @@ try:
                     st.subheader('Per Pool')
                     new_selection = chain_dict[selected_chain]
                     new_df = aggrid_interactive_table(new_selection)
-
-  
 
 
 except:
