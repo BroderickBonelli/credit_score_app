@@ -230,7 +230,7 @@ def compile_all(x, discount_factor):
     final_df['Value At Risk ($)'] = final_df['Value At Risk ($)'].fillna(0)
     final_df['Value At Risk (%)'] = final_df['Value At Risk (%)'].fillna(0)
     final_df['Value At Risk (%)'] = (final_df['Value At Risk (%)'] * 100).round(2)
-    final_df = final_df.rename(columns={'TVL':'TVL ($)', 'Realized Losses':'Realized Losses ($)', 'Value At Risk ($)':'At-Risk Capital ($)', 'Value At Risk (%)':'At-Risk Capital (%)'})
+    final_df = final_df.rename(columns={'TVL':'TVL ($)', 'Realized Losses':'Outstanding Realized Losses ($)', 'Value At Risk ($)':'At-Risk Capital ($)', 'Value At Risk (%)':'At-Risk Capital (%)'})
     final_df = final_df.reset_index(drop=True)
     #final_df = final_df.style.format({'Value At Risk ($)': '${0:,.0f}', 'TVL':'${0:,.0f}', \
     #                                 'Realized Losses': '${0:,.0f}', 'Value At Risk (%)': '{0:,.2%}'})
