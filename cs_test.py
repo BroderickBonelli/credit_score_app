@@ -323,4 +323,16 @@ except:
 if st.button('Back'):
     refresh_component()
 
+    
+    
+st.subheader('Glossary:')
+st.write("""
+
+Outstanding Realized Losses: Total amount of outstanding borrows for which there is no collateral.
+
+At-Risk Capital ($): The USD value of borrows that will be at risk of liquidation should the collateral value fall by the selected percentage.
+
+At-Risk Capital (%): At-Risk Capital as a percentage of total collateral, should the collateral value fall by the selected percentage.
+
+"""
 
