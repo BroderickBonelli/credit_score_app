@@ -334,5 +334,5 @@ At-Risk Capital ($): The USD value of borrows that will be at risk of liquidatio
 
 At-Risk Capital (%): At-Risk Capital as a percentage of total collateral, should the collateral value fall by the selected percentage.
 
-"""
+""")
 
