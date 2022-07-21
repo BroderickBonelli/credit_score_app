@@ -348,14 +348,14 @@ chain_dict = {'Harmony':aave_harmony_markets, 'Avalanche':aave_avalanche_markets
 placeholder = st.empty()
 try:
     with placeholder.container():
-        st.write('Agg Data')
+        st.subheader('Aggregate Data')
         selection = aggrid_interactive_table(agg_df)
         if selection:
             selected_chain = selection["selected_rows"][0]['Chain']
             if selected_chain:
                 placeholder = placeholder.empty()
                 with placeholder.container():
-                    st.write('Per Pool')
+                    st.subheader('Per Pool')
                     new_selection = chain_dict[selected_chain]
                     new_df = aggrid_interactive_table(new_selection)
 
